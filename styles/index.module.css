@@ -1,0 +1,76 @@
+.searchBarContainer{
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+  padding-top: 20vh;
+  background-color: #f8f8f8;
+}
+
+.searchBarContainer h1{
+  text-align: center;
+  animation: makeVisible 1.5s forwards;
+}
+
+.searchBarDiv{
+  display: grid;
+  grid-template-columns: 1fr 50px;
+  column-gap: 10px;
+  border-radius: 35px;
+  border: solid 2px grey;
+  padding: 5px;
+  animation: expand 1.5s forwards;
+}
+
+.centerAlign{
+  display: flex;
+  align-items: center;
+}
+
+.searchBar{
+  height: 100%;
+  margin-left: 10px;
+  width: 100%;
+  border: none !important;
+  background-color: transparent;
+}
+
+.searchBar:focus{
+  outline: none;
+}
+
+
+@keyframes expand {
+  from {
+    width: 15vw;
+    opacity: 0;
+  }
+  to {
+    width: 40vw;
+    opacity: 1;
+  }
+}
+
+@keyframes makeVisible {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+
+@media only screen and (max-width: 600px) {
+
+  .searchBarContainer h1{
+    font-size: 1.6rem;
+  }
+
+  @keyframes expand {
+    from {
+      width: 15vw;
+      opacity: 0;
+    }
+    to {
+      width: 90vw;
+      opacity: 1;
+    }
+  }
+}
