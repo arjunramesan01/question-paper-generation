@@ -39,6 +39,33 @@
   outline: none;
 }
 
+.statusHolder{
+  padding: 1rem;
+  text-align: center;
+}
+
+.statusHolder span{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.topMatches{
+  margin-top: 2rem;
+}
+
+.topMatchesDiv{
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  background: white;
+  font-weight: 300;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 20px;
+}
 
 @keyframes expand {
   from {

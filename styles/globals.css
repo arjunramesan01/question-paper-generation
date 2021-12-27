@@ -14,3 +14,19 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.pointer{
+  cursor: pointer;
+}
+
+.popup-overlay{
+  background-color: rgb(0,0,0,0.6);
+}
+
+.popup-content{
+  border-radius: 10px;
+  background-color: white;
+  padding: 1rem;
+  max-width: 60vw;
+  max-height: 60vh;
+}
