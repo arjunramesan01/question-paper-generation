@@ -1,7 +1,30 @@
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+
 const SolutionPopup = (data) => {
+    const mathjaxConfig = {
+        "fast-preview": {
+            disabled: true
+          },
+          tex2jax: {
+            inlineMath: [
+              ["$", "$"],
+              ["\\(", "\\)"]
+            ],
+            displayMath: [
+              ["$$", "$$"],
+              ["\\[", "\\]"]
+            ]
+          },
+          messageStyle: "none"
+    }
+
     return (
         <>
-         <div dangerouslySetInnerHTML={{ __html: data.clickedSolution}}></div>
+        <MathJaxContext version={2} config={mathjaxConfig}>
+            <MathJax>
+            <div dangerouslySetInnerHTML={{ __html: data.clickedSolution}}></div>
+            </MathJax>
+        </MathJaxContext>
         </>
     )
 }

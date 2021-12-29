@@ -73,6 +73,7 @@ const Home: NextPage = () => {
 }
 
   function getQuestionPaper(textArray:any){
+    console.log('here')
     var uniquePapers:any = [];
 
    getAllAssesments().then(r=>r.json()).then(res=>{
@@ -86,7 +87,9 @@ const Home: NextPage = () => {
 
      if(res['assessments']['evaluated']){
       for(var i=0;i<res['assessments']['evaluated'].length;i++){
-          var check1arr = [res['assessments']['evaluated'][i]['grade'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['board'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['subject'].toLocaleLowerCase()]
+          // var check1arr = [res['assessments']['evaluated'][i]['grade'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['board'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['subject'].toLocaleLowerCase()]
+          var check1arr = [res['assessments']['evaluated'][i]['grade'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['board'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['subject'].toLocaleLowerCase()]
+
           var MatchCount = 0;
           for(var j=0;j<textArray.length;j++){
             for(var k=0;k<check1arr.length;k++){
@@ -104,7 +107,8 @@ const Home: NextPage = () => {
 
     if(res['assessments']['draft']){
       for(var i=0;i<res['assessments']['draft'].length;i++){
-          var check1arr = [res['assessments']['draft'][i]['grade'].toLocaleLowerCase(), res['assessments']['draft'][i]['board'].toLocaleLowerCase(), res['assessments']['draft'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['draft'][i]['subject'].toLocaleLowerCase()]
+        // var check1arr = [res['assessments']['draft'][i]['grade'].toLocaleLowerCase(), res['assessments']['draft'][i]['board'].toLocaleLowerCase(), res['assessments']['draft'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['draft'][i]['subject'].toLocaleLowerCase()]
+        var check1arr = [res['assessments']['draft'][i]['grade'].toLocaleLowerCase(), res['assessments']['draft'][i]['board'].toLocaleLowerCase(), res['assessments']['draft'][i]['subject'].toLocaleLowerCase()]
           var MatchCount = 0;
           for(var j=0;j<textArray.length;j++){
             for(var k=0;k<check1arr.length;k++){
@@ -122,7 +126,8 @@ const Home: NextPage = () => {
 
     if(res['assessments']['correcting']){
       for(var i=0;i<res['assessments']['correcting'].length;i++){
-          var check1arr = [res['assessments']['correcting'][i]['grade'].toLocaleLowerCase(), res['assessments']['correcting'][i]['board'].toLocaleLowerCase(), res['assessments']['correcting'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['correcting'][i]['subject'].toLocaleLowerCase()]
+          // var check1arr = [res['assessments']['correcting'][i]['grade'].toLocaleLowerCase(), res['assessments']['correcting'][i]['board'].toLocaleLowerCase(), res['assessments']['correcting'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['correcting'][i]['subject'].toLocaleLowerCase()]
+          var check1arr = [res['assessments']['correcting'][i]['grade'].toLocaleLowerCase(), res['assessments']['correcting'][i]['board'].toLocaleLowerCase(), res['assessments']['correcting'][i]['subject'].toLocaleLowerCase()]
           var MatchCount = 0;
           for(var j=0;j<textArray.length;j++){
             for(var k=0;k<check1arr.length;k++){
@@ -148,7 +153,7 @@ const Home: NextPage = () => {
         break
       }
 
-      var text = 'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'] + " " + sortedResults[i]['academicYear'];
+      var text = 'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'];
 
       if(uniquePapers.includes(text)==false){
         filteredList.push({

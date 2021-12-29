@@ -1,30 +1,53 @@
 .paperContainer{
     padding: 1rem;
+    margin:auto;
+    width: 60vw;
 }
 
 .header{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    background-color: #813588;
-    color:white;
     text-align: center;
     padding: 1rem;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    border-bottom: solid 2px black;
 }
 
 .contentContainer{
-    margin-top: 1rem;
-    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
     padding: 1rem;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
+
+.sectionTitle{
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 0.5rem;
+}
+
+.sectionInstructions{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.instructionsDiv{
+    margin-bottom: 2rem;
+}
+
 .groupTitle{
     font-weight: bold;
     font-size: 16px;
+    margin-bottom: 0.5rem;
+}
+
+
+.groupInstructions{
     margin-bottom: 2rem;
+}
+
+.topDashboardDiv{
+    background-color: #ffcd72;
+    color: #4d3200;
 }
 
 .questionDiv{
@@ -34,14 +57,91 @@
     margin-bottom: 1rem;
     padding-bottom: 1rem;
 }
+.insightsDashboardDiv{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.insightsDashboardDiv div{
+    overflow: auto;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
+.tag{
+    display: inline-block;
+    background: orange;
+    color: white;
+    padding: 0.5rem;
+    font-weight: bold;
+    font-size: 10px;
+    border-radius: 12px;
+    margin-right: 0.5rem;
+    margin-top: 2rem;
+}
+
+.dashboardSelect{
+    float: right;
+    border: none;
+    padding: 0.5rem;
+}
+
+.insightsDashboardTitle{
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 18px;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+}
 
 .questionDiv p{
     margin-top: 0;
     margin-bottom: 0;
 }
 
+.sidebarCloseButton{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dashboardTitle{
+    font-weight: bold;
+    font-size: 16px;
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+.dashboardTypeDiv button{
+    background-color: #813588;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+}
+
+
+.dashboardDiv{
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    border: solid 2px rgb(37, 170, 223);
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
 .questionDiv img{
-   margin:01rem
+   margin:01rem;
+   max-width: 60vw;
 }
 
 .marksText{
@@ -97,4 +197,51 @@
 .markingAsssistDiv p{
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.questionDiv div{
+    overflow: auto;
+}
+
+.ctaBanner{
+    height: 10rem;
+    position: relative;
+    margin-top: 2rem;
+    cursor: pointer;
+}
+
+.bookClassCTA{
+    font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px 40px;
+    border-radius: 30px;
+    background-color: #ff806d;
+    margin-top: 1rem;
+    background-image: linear-gradient(90deg,#ff806d,#f7c500);
+}
+
+
+@media only screen and (max-width: 600px) {
+
+.questionDiv {
+    grid-template-columns: 1fr;
+}
+
+.paperContainer{
+    width: auto;
+}
+
+
+.viewSolutionButton{
+    margin-left: 1rem;
+}
+
+.insightsDashboardDiv{
+    grid-template-columns: 1fr;
+    row-gap: 1rem;
+}
+
 }
