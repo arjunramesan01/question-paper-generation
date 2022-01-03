@@ -266,4 +266,9 @@
     row-gap: 1rem;
 }
 
+.insightsDashboardTitle{
+    grid-template-columns: 1fr;
+}
+
+
 }
