@@ -1,8 +1,9 @@
+// @ts-nocheck
 import { useState } from "react"
 import styles from '../styles/question-paper.module.css'
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 
-const MarkingAssistPopup = (data) => {
+const MarkingAssistPopup = (data:any) => {
     var [steps, setSteps] = useState(data.rubrics);
     const mathjaxConfig = {
         "fast-preview": {

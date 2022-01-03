@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 const SolutionPopup = (data) => {
