@@ -46,6 +46,8 @@ const QuestionPaper: NextPage = () => {
     var [dashboardMatrix, setDashboardMatrix] = useState(null);
     var [dashboardType, setDashboardType] = useState('count');
     var [openDahboardPanel, setOpenDahboardPanel] = useState(false);
+    var [historicalClicked, setHistoricalClicked] = useState(false);
+    var [filterSelected, setFilterSelected] = useState(null);
     const alphabet = ['A','B','C','D','E'];
     const bloomsMapping = [
         'Remember',
@@ -94,7 +96,6 @@ const QuestionPaper: NextPage = () => {
 
 
     function generateGraph1(data, type){
-
         if(!data){
             data = questionsList;
         }
@@ -438,8 +439,9 @@ const QuestionPaper: NextPage = () => {
         <div className={styles.topDashboardDiv}>
             <div className={styles.paperContainer}>
                 <div className={styles.insightsDashboardTitle}>
-                    <div>
-                        Top Questions by {selectedDashboardView}
+                    <div className={styles.tabs}>
+                        <div style={!historicalClicked ? {backgroundColor: 'white'} : {backgroundColor: '#d9d9d9'}} onClick={()=>{setHistoricalClicked(false)}}>Top Questions by {selectedDashboardView}</div>
+                        <div style={historicalClicked ? {backgroundColor: 'white'} : {backgroundColor: '#d9d9d9'}} onClick={()=>{setHistoricalClicked(true)}}>Historical Data</div>
                     </div>
                     <div>
                         <select className={styles.dashboardSelect} value={selectedDashboardView}
@@ -451,7 +453,7 @@ const QuestionPaper: NextPage = () => {
                 </div>
                 <div className={styles.insightsDashboardDiv}>
                     <div>
-                    { graph1data &&
+                    { graph1data && historicalClicked==false &&
                         <Bar
                             data={graph1data}
                             width={400}
@@ -469,6 +471,28 @@ const QuestionPaper: NextPage = () => {
                                 }
                             }}
                         />
+                        }
+                        { historicalClicked &&
+                        <>
+                            <Bar
+                            data={{
+                                labels: [],
+                                datasets: [{
+                                  label: 'Marks',
+                                  data: [],
+                                  backgroundColor: [
+                                    'rgba(54, 162, 235, 0.2)',
+                                  ],
+                                  borderColor: [
+                                    'rgba(54, 162, 235, 1)',
+                                  ],
+                                  borderWidth: 1
+                                }]
+                            }}
+                            width={400}
+                            height={200}
+                        />
+                        </>
                         }
                     </div>
                     <div>
@@ -514,11 +538,18 @@ const QuestionPaper: NextPage = () => {
                             </div>
                             </>
                             }
-                            {el['groups'].map((el,i) => 
+                            {el['groups'].map((elT,i) => 
                             <div className={styles.groupDiv} key={'group_' + i}>
-                                <div className={styles.groupTitle}>{el['info']['name']}</div>
-                                <div className={styles.groupInstructions}>{el['info']['instructions']}</div>
-                                {el['questions'].map((el,j) =>
+                                {elT['questions'].map((el,j) =>
+                                <>
+                                { 
+                                <div style={(filterSelected == null || filterSelected == el['question']['matchingRelation']['topic'] || filterSelected == el['question']['matchingRelation']['bloomsIndex'] || filterSelected == el['question']['type']) ? {opacity:1} : {opacity:0.1}}>
+                                    { j==0 &&
+                                    <>
+                                    <div className={styles.groupTitle}>{elT['info']['name']}</div>
+                                    <div className={styles.groupInstructions}>{elT['info']['instructions']}</div>
+                                    </>
+                                    }
                                     <div className={styles.questionDiv} key={'question_' + j}>
                                         <div>Q{(j+1)}. </div>
                                         <div>
@@ -548,13 +579,13 @@ const QuestionPaper: NextPage = () => {
                                             </div>
                                             }
                                             <div className={styles.tagsDiv}>
-                                                <div className={styles.tag}>
+                                                <div onClick={()=>{setFilterSelected(el['question']['matchingRelation']['topic'])}} className={styles.tag} style={{backgroundColor: 'orange'}}>
                                                     <span>{el['question']['matchingRelation']['topic']}</span>
                                                 </div>
-                                                <div className={styles.tag}>
+                                                <div onClick={()=>{setFilterSelected(el['question']['matchingRelation']['bloomsIndex'])}} className={styles.tag} style={{backgroundColor: '#ff6f6f'}}>
                                                     <span>{bloomsMapping[el['question']['matchingRelation']['bloomsIndex']+1]}</span>
                                                 </div>
-                                                <div className={styles.tag}>
+                                                <div onClick={()=>{setFilterSelected(el['question']['type'])}} className={styles.tag} style={{backgroundColor: '#8fc752'}}>
                                                     <span>{el['question']['type']}</span>
                                                 </div>
                                             </div>
@@ -565,6 +596,9 @@ const QuestionPaper: NextPage = () => {
                                             { el['question']['rubrics'][0]['steps'].length>1 && <div className={styles.viewSolutionButton} onClick={()=>{setShowMarkingAssistPopup(true);setMarkingAssist(el['question']['rubrics'][0]['steps'])}}>Marking Assist</div>}
                                         </div>
                                     </div>
+                                </div>
+                                }
+                                </>
                                 )}
                             </div>
                             )}
@@ -575,6 +609,11 @@ const QuestionPaper: NextPage = () => {
                     </div>
                 </MathJax>
             </MathJaxContext>
+
+            {/* <div className={styles.filterDiv} onClick={()=>{setOpenDahboardPanel(true)}}>
+                <Image src="/images/filter.png" height="30" width="30"></Image>
+            </div> */}
+
             <div className={styles.dashboardDiv} onClick={()=>{setOpenDahboardPanel(true)}}>
                 <Image src="/images/table.png" height="30" width="30"></Image>
             </div>
