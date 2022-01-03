@@ -579,15 +579,21 @@ const QuestionPaper: NextPage = () => {
                                             </div>
                                             }
                                             <div className={styles.tagsDiv}>
+                                                { el['question']['matchingRelation']['topic'] &&
                                                 <div onClick={()=>{setFilterSelected(el['question']['matchingRelation']['topic'])}} className={styles.tag} style={{backgroundColor: 'orange'}}>
                                                     <span>{el['question']['matchingRelation']['topic']}</span>
                                                 </div>
+                                                }
+                                                { bloomsMapping[el['question']['matchingRelation']['bloomsIndex']+1] &&
                                                 <div onClick={()=>{setFilterSelected(el['question']['matchingRelation']['bloomsIndex'])}} className={styles.tag} style={{backgroundColor: '#ff6f6f'}}>
                                                     <span>{bloomsMapping[el['question']['matchingRelation']['bloomsIndex']+1]}</span>
                                                 </div>
+                                                }
+                                                { el['question']['type'] &&
                                                 <div onClick={()=>{setFilterSelected(el['question']['type'])}} className={styles.tag} style={{backgroundColor: '#8fc752'}}>
                                                     <span>{el['question']['type']}</span>
                                                 </div>
+                                                }
                                             </div>
                                         </div>
                                         <div>
