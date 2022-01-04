@@ -85,7 +85,6 @@ const QuestionPaper: NextPage = () => {
             setAssesmentDetails(res['assessment'])
             var questions = res['assessment']['paperSections'];
             setQuestionsList(questions);
-            console.log(questions)
             generateDashboardMatrix(questions);
             generateGraph1(questions, 'Chapter');
             setLoaded(true);
@@ -109,9 +108,11 @@ const QuestionPaper: NextPage = () => {
         for(var i=0;i<data.length;i++){
             for(var j=0;j<data[i]['groups'].length;j++){
                 for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
-                    chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']] = {
-                        'marks' : 0,
-                        'count' : 0
+                    if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']] = {
+                            'marks' : 0,
+                            'count' : 0
+                        }
                     }
                 }
             }
@@ -119,9 +120,10 @@ const QuestionPaper: NextPage = () => {
         for(var i=0;i<data.length;i++){
             for(var j=0;j<data[i]['groups'].length;j++){
                 for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
-                    chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']]['marks'] += data[i]['groups'][j]['questions'][k]['question']['marks']
-                    chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']]['count'] += 1
-
+                    if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']]['marks'] += data[i]['groups'][j]['questions'][k]['question']['marks']
+                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']]['count'] += 1
+                    }
                     }
                 }
         }
@@ -132,9 +134,11 @@ const QuestionPaper: NextPage = () => {
             for(var i=0;i<data.length;i++){
                 for(var j=0;j<data[i]['groups'].length;j++){
                     for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
-                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']] = {
-                            'marks' : 0,
-                            'count' : 0
+                        if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                            chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']] = {
+                                'marks' : 0,
+                                'count' : 0
+                            }
                         }
                     }
                 }
@@ -142,9 +146,10 @@ const QuestionPaper: NextPage = () => {
             for(var i=0;i<data.length;i++){
                 for(var j=0;j<data[i]['groups'].length;j++){
                     for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
-                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']]['marks'] += data[i]['groups'][j]['questions'][k]['question']['marks']
-                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']]['count'] += 1
-    
+                        if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                            chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']]['marks'] += data[i]['groups'][j]['questions'][k]['question']['marks']
+                            chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']]['count'] += 1
+                        }
                         }
                     }
             }
@@ -190,6 +195,7 @@ const QuestionPaper: NextPage = () => {
               borderWidth: 1
             }]
         }
+
 
         setGraph1data(data);
         setSummarytext('This year\'s question paper had highest marks from the ' + ((type == 'Chapter') ? 'chapter ' : 'topic ') + ' <b>' + labels[0] + '</b>.')
