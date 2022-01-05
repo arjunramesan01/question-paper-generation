@@ -549,7 +549,7 @@ const QuestionPaper: NextPage = () => {
                                 {elT['questions'].map((el,j) =>
                                 <>
                                 { 
-                                <div style={(filterSelected == null || filterSelected == el['question']['matchingRelation']['topic'] || filterSelected == el['question']['matchingRelation']['bloomsIndex'] || filterSelected == el['question']['type']) ? {opacity:1} : {opacity:0.1}}>
+                                <div style={(filterSelected == null || filterSelected == el['question']['matchingRelation']['topic'] || filterSelected == el['question']['matchingRelation']['bloomsIndex'] || filterSelected == el['question']['type']) ? {opacity:1} : {opacity:0.2}}>
                                     { j==0 &&
                                     <>
                                     <div className={styles.groupTitle}>{elT['info']['name']}</div>
@@ -630,7 +630,7 @@ const QuestionPaper: NextPage = () => {
                 <Image src="/images/table.png" height="30" width="30"></Image>
             </div>
         
-            <SlidingPanel type={'right'} isOpen={openDahboardPanel} size={40}>
+            <SlidingPanel type={'right'} isOpen={openDahboardPanel} size={(window.innerWidth>600) ? 40 : 100}>
             <>
                 <div className={styles.dashboardTitle}>
                     <div onClick={()=>{setOpenDahboardPanel(false)}} className={styles.sidebarCloseButton}><Image src="/images/x-mark.png" height="15" width="15"></Image></div>
@@ -640,7 +640,7 @@ const QuestionPaper: NextPage = () => {
                         { dashboardType=='marks' && <button onClick={()=>{setDashboardType('count')}}>View question count</button>}
                     </div>
                 </div>
-                <table>
+                <table className={styles.mytable}>
                     <tbody>
                     <tr>
                         <th>Type/Blooms Index</th>

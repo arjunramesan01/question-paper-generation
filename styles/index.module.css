@@ -4,12 +4,27 @@
   min-height: 100vh;
   padding: 1rem;
   padding-top: 20vh;
-  background-color: #f8f8f8;
 }
 
 .searchBarContainer h1{
   text-align: center;
   animation: makeVisible 1.5s forwards;
+}
+
+.loaderDiv{
+  text-align: center;
+}
+
+.loaderImageDiv{
+  position: relative;
+  width: 30rem;
+  height: 22rem;
+  animation: grow 1.5s forwards;
+}
+
+.loaderImageText{
+  transform: translate(0, -3rem);
+  color: grey;
 }
 
 .searchBarDiv{
@@ -82,6 +97,14 @@
   from {opacity: 0;}
   to {opacity: 1;}
 }
+
+
+@keyframes grow {
+  from {transform: scale(0.2);}
+  to {transform: scale(1);}
+}
+
+
 
 
 @media only screen and (max-width: 600px) {

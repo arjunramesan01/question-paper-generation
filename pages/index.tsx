@@ -9,10 +9,16 @@ const Home: NextPage = () => {
 
   var [status, setStatus] = useState('');
   var [topMatches, setTopMatches] = useState([]);
+  var [loadingText, setLoadingText] = useState('Detecting intent...');
+
   const router = useRouter();
 
 
   function intentDetector(){
+    setStatus('detecting');
+    setLoadingText('Detecting intent...');
+    setTopMatches([])
+
     var input = document.getElementById('searchInput') as HTMLInputElement
     if(!input.value){
       return
@@ -42,24 +48,34 @@ const Home: NextPage = () => {
 
     }
 
-    console.log(questionPaperScore)
-    console.log(importantQuestionScore)
-    console.log(questionScore)
+    window.setTimeout(()=>{
+      if((questionPaperScore > importantQuestionScore) && (questionPaperScore > questionScore)){
+        setLoadingText('Loading question papers...');
+        getQuestionPaper(textArray);
+      }
+      else if((importantQuestionScore > questionPaperScore) && (importantQuestionScore > questionScore)){
+        setLoadingText('Loading textbook questions...');
+        window.setTimeout(()=>{
+          setStatus('');
+        },3000)
+      }
+      else if(((questionScore > importantQuestionScore) && (questionScore > questionPaperScore)) || (questionScore==0 && importantQuestionScore==0 && questionPaperScore==0)){
+        setLoadingText('Loading solution...');
+        window.setTimeout(()=>{
+          setStatus('');
+        },3000)
+      }
+      else{
+        noMatch();
+      }
+    },3000)
+  }
 
-    if((questionPaperScore > importantQuestionScore) && (questionPaperScore > questionScore)){
-      setStatus('questionpaper');
-      getQuestionPaper(textArray);
-    }
-    else if((importantQuestionScore > questionPaperScore) && (importantQuestionScore > questionScore)){
-      setStatus('importantquestions')
-    }
-    else if(((questionScore > importantQuestionScore) && (questionScore > questionPaperScore)) || (questionScore==0 && importantQuestionScore==0 && questionPaperScore==0)){
-      setStatus('question')
-    }
-    else{
-      setStatus('nomatch');
-    }
-   
+  function noMatch(){
+    setLoadingText('Could not find any match.');
+    window.setTimeout(()=>{
+      setStatus('');
+    },3000)
   }
 
   function sortResults(people:any, prop:any, asc:any) {
@@ -73,7 +89,6 @@ const Home: NextPage = () => {
 }
 
   function getQuestionPaper(textArray:any){
-    console.log('here')
     var uniquePapers:any = [];
 
    getAllAssesments().then(r=>r.json()).then(res=>{
@@ -81,8 +96,8 @@ const Home: NextPage = () => {
      var matches = [];
 
      if(!res['assessments']){
-       setStatus('nomatch');
-       return
+        noMatch();
+        return
      }
 
      if(res['assessments']['evaluated']){
@@ -170,12 +185,12 @@ const Home: NextPage = () => {
     // @ts-ignore
     setTopMatches(filteredList);
     if(filteredList.length==0){
-       setStatus('nomatch');
+      noMatch();
     }
 
     window.setTimeout(()=>{
       setStatus('');
-    },1500);
+    },3000);
    })
   }
 
@@ -197,6 +212,8 @@ const Home: NextPage = () => {
     <div className={styles.searchBarContainer}>
       <div>
         <h1>Byjus Universal Search</h1>
+
+        { status!= 'detecting' &&
         <div className={styles.searchBarDiv}>
           <div className={styles.centerAlign}>
             <input id="searchInput" className={styles.searchBar} onKeyPress={(e) => {keyPressed(e)}} placeholder='Type here...'></input>
@@ -207,26 +224,14 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        { status!= '' &&
-        <>
-        <div className={styles.statusHolder}>
-          {status == 'nomatch' && 
-            <span>No match found! Try searching for something else. </span>
-          }
-         
-          {status == 'questionpaper' && 
-            <span>Loading question paper... &nbsp; <Image src="/images/mario.gif" height="40" width="40"></Image></span>
-          }
-          {status == 'importantquestions' && 
-            <span>Loading important questions... &nbsp; <Image src="/images/mario.gif" height="40" width="40"></Image></span>
-          }
-          {status == 'question' && 
-            <span>Loading questions... &nbsp; <Image src="/images/mario.gif" height="40" width="40"></Image></span>
-          }
-        </div>
-        </>
         }
-        { status=='' && topMatches.length>0 &&
+        { status== 'detecting' &&
+        <div className={styles.loaderDiv}>
+          <div className={styles.loaderImageDiv}><Image src="/images/loading_new.gif" layout='fill'></Image></div>
+          <div className={styles.loaderImageText}>{loadingText}</div>
+        </div>
+        }
+        { status!='detecting' && topMatches.length>0 &&
         <>
         <div className={styles.topMatches}>
           <h3>Top Matches : </h3>

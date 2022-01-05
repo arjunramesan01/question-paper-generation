@@ -270,5 +270,12 @@
     grid-template-columns: 1fr;
 }
 
+.dashboardTitle{
+    font-size: 12px;
+}
+
+.mytable{
+    font-size: 0.5rem;
+}
 
 }
