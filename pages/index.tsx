@@ -255,7 +255,7 @@ const Home: NextPage = () => {
               <span><div className={styles.blinkRed}></div>Listening</span>
           </div>
           <div className={styles.transcript}>
-              <span>"{transcript}"</span>
+              <span>&quot{transcript}&quot</span>
           </div>
           </>
           }
