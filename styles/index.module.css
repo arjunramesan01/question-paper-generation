@@ -11,19 +11,70 @@
   animation: makeVisible 1.5s forwards;
 }
 
+.blinkRed{
+  border-radius: 50%;
+  height: 0.8rem;
+  width: 0.8rem;
+  display: inline-block;
+  padding-top: 0.2rem;
+  margin-right: 0.2rem;
+  vertical-align: middle;
+  background-color: red;
+  animation: makeVisible_blink 1s infinite;
+}
+
+.listeningDiv{
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 01rem;
+  color: #626262;
+}
+
 .loaderDiv{
   text-align: center;
 }
 
+.transcript{
+  font-style: italic;
+  font-style: italic;
+  text-align: center;
+  margin-top: 1rem;
+  max-width: 50vw;
+}
+
+.searchContainerDiv{
+  display: grid;
+  grid-template-columns: auto 60px;
+  column-gap: 10px;
+}
+
+.micContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: makeVisible 1.5s forwards;
+}
+
+.microphoneDiv{
+  border: solid 2px grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+}
+
 .loaderImageDiv{
   position: relative;
-  width: 30rem;
-  height: 22rem;
+  width: 10rem;
+  height: 10rem;
   animation: grow 1.5s forwards;
+  margin: auto;
 }
 
 .loaderImageText{
-  transform: translate(0, -3rem);
+  transform: translate(0, 0em);
   color: grey;
 }
 
@@ -105,6 +156,11 @@
 }
 
 
+@keyframes makeVisible_blink{
+  0% {opacity: 0;}
+  50% {opacity: 1;}
+  100% {opacity: 0;}
+}
 
 
 @media only screen and (max-width: 600px) {

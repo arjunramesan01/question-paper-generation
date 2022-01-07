@@ -1,18 +1,32 @@
+// @ts-nocheck
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import styles from '../styles/index.module.css'
 import {getAllAssesments} from '../common';
 import {useState} from "react";
 import { useRouter } from 'next/router'
+import 'regenerator-runtime/runtime'
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Home: NextPage = () => {
 
   var [status, setStatus] = useState('');
   var [topMatches, setTopMatches] = useState([]);
   var [loadingText, setLoadingText] = useState('Detecting intent...');
-
   const router = useRouter();
-
+  const commands = [
+    {
+      command: '*',
+      callback: (text) => (document.getElementById('searchInput').value = text)
+    },
+  ]
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition({commands});
+  const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
   function intentDetector(){
     setStatus('detecting');
@@ -207,6 +221,8 @@ const Home: NextPage = () => {
     // setStatus('')
   }
 
+
+
   return (
    <>
     <div className={styles.searchBarContainer}>
@@ -214,20 +230,41 @@ const Home: NextPage = () => {
         <h1>Byjus Universal Search</h1>
 
         { status!= 'detecting' &&
-        <div className={styles.searchBarDiv}>
-          <div className={styles.centerAlign}>
-            <input id="searchInput" className={styles.searchBar} onKeyPress={(e) => {keyPressed(e)}} placeholder='Type here...'></input>
-          </div>
-          <div>
+        <>
+        <div className={styles.searchContainerDiv}>
+          <div className={styles.searchBarDiv}>
             <div className={styles.centerAlign}>
-              <Image className="pointer" onClick={() => intentDetector()} src="/images/Search.png" height="50" width="50"></Image>
+              <input id="searchInput" className={styles.searchBar} onKeyPress={(e) => {keyPressed(e)}} placeholder='Type here...'></input>
+            </div>
+            <div>
+              <div className={styles.centerAlign}>
+                <Image className="pointer" onClick={() => intentDetector()} src="/images/Search.png" height="50" width="50"></Image>
+              </div>
+            </div>
+          </div>
+          <div className={styles.micContainer}>
+            <div className={styles.microphoneDiv + " pointer"} onClick={startListening}>
+                <Image src="/images/microphone-2.png" height="25" width="20"></Image>
             </div>
           </div>
         </div>
+        <div>
+          { listening==true &&
+          <>
+          <div className={styles.listeningDiv}>
+              <span><div className={styles.blinkRed}></div>Listening</span>
+          </div>
+          <div className={styles.transcript}>
+              <span>"{transcript}"</span>
+          </div>
+          </>
+          }
+        </div>
+        </>
         }
         { status== 'detecting' &&
         <div className={styles.loaderDiv}>
-          <div className={styles.loaderImageDiv}><Image src="/images/loading_new.gif" layout='fill'></Image></div>
+          <div className={styles.loaderImageDiv}><Image src="/images/loader3.gif" layout='fill'></Image></div>
           <div className={styles.loaderImageText}>{loadingText}</div>
         </div>
         }
