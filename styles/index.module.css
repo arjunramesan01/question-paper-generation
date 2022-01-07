@@ -169,14 +169,19 @@
     font-size: 1.6rem;
   }
 
+  .transcript{
+    max-width: none;
+  }
+
   @keyframes expand {
     from {
       width: 15vw;
       opacity: 0;
     }
     to {
-      width: 90vw;
+      width: 70vw;
       opacity: 1;
     }
   }
+  
 }
