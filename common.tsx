@@ -29,9 +29,7 @@ export function getIntent(text:any){
 
 export function titleGenerator(text:any){
     try{
-    var textArr= text.split('-')
-    var newText= textArr[0] + ' ' + textArr[1] + ' ' + textArr[2] + ' ' + textArr[3] + ' ' + textArr[4].split(' ')[0]
-      return newText
+        return text.replace(/-/g, ' ');
     }
     catch(err){
       return text

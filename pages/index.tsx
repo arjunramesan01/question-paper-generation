@@ -121,16 +121,6 @@ const Home: NextPage = () => {
     });
 }
 
-function titleGenerator(text){
-  try{
-    var newText= text.split('-')[0] + ' ' + text.split('-')[1] + ' ' + text.split('-')[2] + ' ' + text.split('-')[3]
-    return newText
-  }
-  catch(err){
-    return text
-  }
-}
-
   function getQuestionPaper(textArray:any){
     var uniquePapers:any = [];
 
@@ -205,12 +195,14 @@ function titleGenerator(text){
 
     for(var i=0;i<sortedResults.length;i++){
       counter++
-      if(counter>5){
+      if(counter>8){
         break
       }
 
+      console.log(sortedResults[i]['title'])
+
       var text = titleGenerator(sortedResults[i]['title'])
-      var text = sortedResults[i]['title'].split('-')[0] + ' '
+      // var text = sortedResults[i]['title'].split('-')[0] + ' '
       // var text =  'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'];
 
       if(uniquePapers.includes(text)==false){
