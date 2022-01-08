@@ -17,3 +17,14 @@ export function getQuestionPaperDetails(id:any){
         },
     });
 }
+
+
+export function getIntent(text:any){
+    return fetch('http://3.236.125.119:5600/byjus/ml/universal_search/v0/intent_detection/?text=' + text, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+

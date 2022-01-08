@@ -13,32 +13,53 @@ const Home: NextPage = () => {
   var [status, setStatus] = useState('');
   var [topMatches, setTopMatches] = useState([]);
   var [loadingText, setLoadingText] = useState('Detecting intent...');
+  var [micClicked, setMicClicked] = useState(false);
   const router = useRouter();
   const commands = [
     {
       command: '*',
-      callback: (text) => (document.getElementById('searchInput').value = text)
+      callback: (text) => (speechDetect(text))
     },
   ]
   const {
     transcript,
     listening,
     resetTranscript,
+    isMicrophoneAvailable,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition({commands});
   const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
-  function intentDetector(){
+
+  function speechDetect(text){
+    document.getElementById('searchInput').value = text;
+    if(text){
+      window.setTimeout(()=>{
+        intentDetector(text);
+      },1000)
+    }
+  }
+
+  function intentDetector(text){
+    console.log('intent detection...');
+
     setStatus('detecting');
     setLoadingText('Detecting intent...');
     setTopMatches([])
+    setMicClicked(false);
 
-    var input = document.getElementById('searchInput') as HTMLInputElement
-    if(!input.value){
+    var input = text;
+    if(!text){
+     input = document.getElementById('searchInput') as HTMLInputElement
+     input = input.value;
+    }
+
+    if(!input){
+      setStatus('');
       return
     }
 
-    var text = input.value.replace(/\s+$/, '');;
+    var text = input.replace(/\s+$/, '');;
     var textArray = text.split(' ');
     var boardList = ['cbse', 'ncert'];
     var yearList = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021', 'papers', 'paper'];
@@ -71,18 +92,18 @@ const Home: NextPage = () => {
         setLoadingText('Loading textbook questions...');
         window.setTimeout(()=>{
           setStatus('');
-        },3000)
+        },1000)
       }
       else if(((questionScore > importantQuestionScore) && (questionScore > questionPaperScore)) || (questionScore==0 && importantQuestionScore==0 && questionPaperScore==0)){
         setLoadingText('Loading solution...');
         window.setTimeout(()=>{
           setStatus('');
-        },3000)
+        },1000)
       }
       else{
         noMatch();
       }
-    },3000)
+    },1000)
   }
 
   function noMatch(){
@@ -204,7 +225,7 @@ const Home: NextPage = () => {
 
     window.setTimeout(()=>{
       setStatus('');
-    },3000);
+    },1000);
    })
   }
 
@@ -238,17 +259,24 @@ const Home: NextPage = () => {
             </div>
             <div>
               <div className={styles.centerAlign}>
-                <Image className="pointer" onClick={() => intentDetector()} src="/images/Search.png" height="50" width="50"></Image>
+                <Image className="pointer" onClick={() => intentDetector(null)} src="/images/Search.png" height="50" width="50"></Image>
               </div>
             </div>
           </div>
           <div className={styles.micContainer}>
-            <div className={styles.microphoneDiv + " pointer"} onClick={startListening}>
+            <div className={styles.microphoneDiv + " pointer"} onClick={() => {setMicClicked(true); if(isMicrophoneAvailable){startListening();}}}>
                 <Image src="/images/microphone-2.png" height="25" width="20"></Image>
             </div>
           </div>
         </div>
         <div>
+          { !isMicrophoneAvailable && micClicked && 
+          <>
+            <div className={styles.listeningDiv}>
+              <span>Microphone is disabled. Please enable it from the browser settings.</span>
+            </div>
+          </>
+          }
           { listening==true &&
           <>
           <div className={styles.listeningDiv}>
