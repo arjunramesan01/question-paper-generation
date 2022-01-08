@@ -48,6 +48,7 @@
 .topDashboardDiv{
     background-color: #ffcd72;
     color: #4d3200;
+    box-shadow: inset -1px -8px 20px 0px #e5a461;
 }
 
 .questionDiv{

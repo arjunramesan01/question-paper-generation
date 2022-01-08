@@ -4,7 +4,7 @@ import styles from '../../styles/question-paper.module.css'
 import {useState} from "react";
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { getQuestionPaperDetails } from '../../common';
+import { getQuestionPaperDetails, getAllAssesments } from '../../common';
 import dynamic from "next/dynamic";
 import Image from 'next/image'
 import SolutionPopup from '../../components/solutionPopup';
@@ -22,6 +22,8 @@ import {
     Title,
     Tooltip,
     Legend,
+    PointElement,
+    LineElement,
   } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 ChartJS.register(
@@ -30,7 +32,9 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    PointElement,
+    LineElement
 );
 
 const QuestionPaper: NextPage = () => {
@@ -58,6 +62,7 @@ const QuestionPaper: NextPage = () => {
         'Create' ,
     ]
     var [graph1data, setGraph1data] = useState(null);
+    var [graph2data, setGraph2data] = useState(null);
     var [summarytext, setSummarytext] = useState(null);
     var [selectedDashboardView, setSelectedDashboardView] = useState('Chapter')
     
@@ -87,12 +92,219 @@ const QuestionPaper: NextPage = () => {
             setQuestionsList(questions);
             generateDashboardMatrix(questions);
             generateGraph1(questions, 'Chapter');
+            generateGraph2(questions, 'Chapters', res['assessment']);
             setLoaded(true);
             }
         })
         }
       }, [router.query.id])
 
+    function generateGraph2(data, type, assesmentDetailsLocal){
+
+        // Old chart //
+
+        if(!data){
+            data = questionsList;
+        }
+        var chapters = []
+        var labels = []
+        var marksData = []
+        var questionCountData = []
+
+        if(type == 'Topic'){
+            
+        for(var i=0;i<data.length;i++){
+            for(var j=0;j<data[i]['groups'].length;j++){
+                for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
+                    if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']] = {
+                            'marks' : 0,
+                            'count' : 0
+                        }
+                    }
+                }
+            }
+        }
+        for(var i=0;i<data.length;i++){
+            for(var j=0;j<data[i]['groups'].length;j++){
+                for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
+                    if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']]['marks'] += data[i]['groups'][j]['questions'][k]['question']['marks']
+                        chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']]['count'] += 1
+                    }
+                    }
+                }
+        }
+        }
+
+        else{
+
+            for(var i=0;i<data.length;i++){
+                for(var j=0;j<data[i]['groups'].length;j++){
+                    for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
+                        if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                            chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']] = {
+                                'marks' : 0,
+                                'count' : 0
+                            }
+                        }
+                    }
+                }
+            }
+            for(var i=0;i<data.length;i++){
+                for(var j=0;j<data[i]['groups'].length;j++){
+                    for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
+                        if(data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                            chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']]['marks'] += data[i]['groups'][j]['questions'][k]['question']['marks']
+                            chapters[data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']]['count'] += 1
+                        }
+                        }
+                    }
+            }
+        }
+
+
+
+
+        var chaptersArray = [];
+
+        for(var key in chapters){
+            chaptersArray.push({
+                'marks' : chapters[key]['marks'],
+                'count' : chapters[key]['count'],
+                'chapter' : key
+            });
+        }
+        var maxCount = 10;
+
+        sortResults(chaptersArray,'marks', false)
+
+        for(var i=0;i<chaptersArray.length;i++){
+            maxCount--;
+            if(maxCount<0){
+                break;
+            }
+            labels.push(chaptersArray[i]['chapter']);
+            marksData.push(chaptersArray[i]['marks'])
+            questionCountData.push(chaptersArray[i]['count'])
+        }
+
+        var data = {
+            labels: labels,
+            datasets: [{
+              label: 'Marks',
+              data: marksData,
+              backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+              ],
+              borderColor: [
+                'rgba(54, 162, 235, 1)',
+              ],
+              borderWidth: 1
+            },
+            {
+                label: "Historical Average",
+                data: [{ x: 1, y: 10 }, { x: 3, y: 10 }],
+                type: "line",
+                fill: "false",
+                // pointRadius: 0,
+                pointStyle: "circle",
+              }
+            ]
+        }
+
+
+
+        // /////////
+
+        // Line Chart //
+        if(!assesmentDetailsLocal){
+            assesmentDetailsLocal = assesmentDetails
+        }
+        var currentPaperArray = assesmentDetailsLocal['title'].split('-')
+        var similar_papers = []
+
+        getAllAssesments().then(r=>r.json()).then(res=>{
+            if(res['assessments']['draft']){
+                var papers = res['assessments']['draft'];
+                for(var i =0;i<papers.length;i++){
+                    var currentLoopPaperArray = papers[i]['title'].split('-');
+                    if(currentLoopPaperArray[0] == currentPaperArray[0] && currentLoopPaperArray[1] == currentPaperArray[1] && currentLoopPaperArray[2] == currentPaperArray[2] && currentLoopPaperArray[3] == currentPaperArray[3]){
+                        similar_papers.push({
+                            'id' : papers[i]['id'],
+                            'title' : papers[i]['title']   
+                        })
+                    }
+                }
+                doTask(similar_papers, labels, data, type);
+            }
+        });
+
+    }
+
+    async function doTask(similar_papers, labels, old_graph_data, type){
+        let result = await getDetails(similar_papers);
+        var average_list = []
+        var totalPapers = result.length;
+
+        for(var i=0;i<labels.length;i++){
+            average_list[i] = 0
+        }
+
+        for(var a=0;a<result.length;a++){
+            var data = result[a]['result']['assessment']['paperSections'];
+            for(var i=0;i<data.length;i++){
+                for(var j=0;j<data[i]['groups'].length;j++){
+                    for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
+                        for(var l=0;l<labels.length;l++){
+                            if(type == 'Chapters'){
+                                if(labels[l] == data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']){
+                                    average_list[l] += data[i]['groups'][j]['questions'][k]['question']['marks']
+                                }
+                            }
+                            else{
+                                if(labels[l] == data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                                    average_list[l] += data[i]['groups'][j]['questions'][k]['question']['marks']
+                                }
+                            }
+                            
+                        }
+                        }
+                    }
+            }
+        }
+
+        for(var i=0;i<average_list.length;i++){
+            average_list[i] = Math.round(average_list[i]/totalPapers);
+        }
+        var newDataset = []
+        for(var i=0;i<labels.length;i++){
+            newDataset.push({
+                x : (i+1),
+                y : average_list[i]
+            })
+        }
+
+        var historicalDataSet = old_graph_data;
+        historicalDataSet['datasets'][1]['data'] = newDataset
+        setGraph2data(historicalDataSet)
+    }
+
+
+    async function getDetails(id_list){
+        for(let i = 0; i < id_list.length; i++){
+            var res3 = await fetch('https://assessed.co.in:9080/api/teacher/paper/details/' + id_list[i]['id'], {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization' : 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2MWM0NWM3ZDE3YjBjOWU0NTBlMTQ3ODQiLCJyb2xlIjoidGVhY2hlciIsInRpbWVzdGFtcCI6IjIwMjEtMTItMjdUMDY6Mjg6MDYuMTEzWiIsImlhdCI6MTY0MDU4NjQ4Nn0.sWlR6mPYKMo4ZtUFmEgNBtPNAK1yZEO5Nzjm5L_SF_U'
+                }
+            })
+            var result = await res3.json()
+            id_list[i]['result'] = result;
+        }
+        return id_list;
+    }
 
     function generateGraph1(data, type){
         if(!data){
@@ -451,7 +663,7 @@ const QuestionPaper: NextPage = () => {
                     </div>
                     <div>
                         <select className={styles.dashboardSelect} value={selectedDashboardView}
-                        onChange={(e) => {setSelectedDashboardView(e.target.value); generateGraph1(null, e.target.value)}}>
+                        onChange={(e) => {setSelectedDashboardView(e.target.value); generateGraph1(null, e.target.value); generateGraph2(null, e.target.value, null);}}>
                             <option value="Chapter">Chapter</option>
                             <option value="Topic">Topic</option>
                         </select>
@@ -477,36 +689,37 @@ const QuestionPaper: NextPage = () => {
                                 }
                             }}
                         />
-                        }
-                        { historicalClicked &&
+                    }
+                    { historicalClicked && graph2data && 
                         <>
-                            <Bar
-                            data={{
-                                labels: [],
-                                datasets: [{
-                                  label: 'Marks',
-                                  data: [],
-                                  backgroundColor: [
-                                    'rgba(54, 162, 235, 0.2)',
-                                  ],
-                                  borderColor: [
-                                    'rgba(54, 162, 235, 1)',
-                                  ],
-                                  borderWidth: 1
-                                }]
-                            }}
-                            width={400}
-                            height={200}
+                        <Bar
+                           data={graph2data}
+                           width={400}
+                           height={200}
+                           options={{
+                               scales: {
+                                   x: {
+                                       ticks: {
+                                           callback: function(value, index, values) {
+                                               var newString = graph2data['labels'][index].substring(0,5) + '...'
+                                               return newString;//truncate
+                                           },
+                                       }
+                                   },
+                               }
+                           }}
                         />
                         </>
-                        }
+                    }
                     </div>
                     <div>
                         <span dangerouslySetInnerHTML={{ __html: summarytext}}></span>
-                        <div className={styles.ctaBanner}>
-                            <Image src="https://cdn1.byjus.com/wp-content/uploads/2021/08/SEO_Popup_Banner_Latest.jpg?imwidth=3840" layout='fill'></Image>
-                        </div>
-                        <div className={styles.bookClassCTA}>Book A Free Class</div>
+                        <a href="https://byjus.com/" rel="noreferrer" target="_blank">
+                            <div className={styles.ctaBanner}>
+                                <Image src="https://cdn1.byjus.com/wp-content/uploads/2021/08/SEO_Popup_Banner_Latest.jpg?imwidth=3840" layout='fill'></Image>
+                            </div>
+                        </a>
+                        <a href="https://byjus.com/" rel="noreferrer" target="_blank"><div className={styles.bookClassCTA}>Book A Free Class</div></a>
                     </div>
                 </div>
             </div>
