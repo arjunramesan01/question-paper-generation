@@ -203,7 +203,8 @@ const Home: NextPage = () => {
         break
       }
 
-      var text = 'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'];
+      var text = sortedResults[i]['title']
+      // var text =  'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'];
 
       if(uniquePapers.includes(text)==false){
         filteredList.push({

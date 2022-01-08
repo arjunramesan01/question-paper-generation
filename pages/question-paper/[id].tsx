@@ -736,15 +736,10 @@ const QuestionPaper: NextPage = () => {
         
         <div className={styles.paperContainer}>        
             <div className={styles.header}>
-                <div>
-                    <span>Board : {assesmentDetails['board']}</span><br></br><br></br>
-                    <span>Grade : {assesmentDetails['grade']}</span>
+                <div className={styles.left}>
+                    <span>{assesmentDetails['title'].split('-').join(' ')}</span>
                 </div>
-                <div>
-                    <span>Subject : {assesmentDetails['subject']} {assesmentDetails['year']}</span><br></br><br></br>
-                    <span>Date : {dateDormatter(assesmentDetails['assessmentDate'])}</span>
-                </div>
-                <div>
+                <div className={styles.right}>
                     <span>Maxmimum marks : {assesmentDetails['totalMarks']}</span><br></br><br></br>
                     {assesmentDetails['duration'] && <span>Time Limit : {assesmentDetails['duration']} minutes</span>}
                 </div>
