@@ -4,7 +4,7 @@ import styles from '../../styles/question-paper.module.css'
 import {useState} from "react";
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { getQuestionPaperDetails, getAllAssesments } from '../../common';
+import { getQuestionPaperDetails, getAllAssesments, titleGenerator } from '../../common';
 import dynamic from "next/dynamic";
 import Image from 'next/image'
 import SolutionPopup from '../../components/solutionPopup';
@@ -104,8 +104,6 @@ const QuestionPaper: NextPage = () => {
     function generateGraph2(data, type, assesmentDetailsLocal){
 
         // Old chart //
-
-        console.log(type);
 
         if(!data){
             data = questionsList;
@@ -297,8 +295,6 @@ const QuestionPaper: NextPage = () => {
         var historicalDataSet = old_graph_data;
         historicalDataSet['datasets'][1]['data'] = newDataset
         setGraph2data(historicalDataSet)
-
-        console.log(newDataset)
     }
 
 
@@ -737,10 +733,10 @@ const QuestionPaper: NextPage = () => {
         <div className={styles.paperContainer}>        
             <div className={styles.header}>
                 <div className={styles.left}>
-                    <span>{assesmentDetails['title'].split('-').join(' ')}</span>
+                    <span>{titleGenerator(assesmentDetails['title'])}</span>
                 </div>
                 <div className={styles.right}>
-                    <span>Maxmimum marks : {assesmentDetails['totalMarks']}</span><br></br><br></br>
+                    <span>Maximum marks : {assesmentDetails['totalMarks']}</span><br></br><br></br>
                     {assesmentDetails['duration'] && <span>Time Limit : {assesmentDetails['duration']} minutes</span>}
                 </div>
             </div>

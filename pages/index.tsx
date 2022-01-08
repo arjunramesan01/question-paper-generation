@@ -2,7 +2,7 @@
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import styles from '../styles/index.module.css'
-import {getAllAssesments} from '../common';
+import {getAllAssesments, titleGenerator} from '../common';
 import {useState} from "react";
 import { useRouter } from 'next/router'
 import 'regenerator-runtime/runtime'
@@ -41,8 +41,6 @@ const Home: NextPage = () => {
   }
 
   function intentDetector(text){
-    console.log('intent detection...');
-
     setStatus('detecting');
     setLoadingText('Detecting intent...');
     setTopMatches([])
@@ -123,13 +121,21 @@ const Home: NextPage = () => {
     });
 }
 
+function titleGenerator(text){
+  try{
+    var newText= text.split('-')[0] + ' ' + text.split('-')[1] + ' ' + text.split('-')[2] + ' ' + text.split('-')[3]
+    return newText
+  }
+  catch(err){
+    return text
+  }
+}
+
   function getQuestionPaper(textArray:any){
     var uniquePapers:any = [];
 
    getAllAssesments().then(r=>r.json()).then(res=>{
-     console.log(res);
      var matches = [];
-
      if(!res['assessments']){
         noMatch();
         return
@@ -203,7 +209,8 @@ const Home: NextPage = () => {
         break
       }
 
-      var text = sortedResults[i]['title']
+      var text = titleGenerator(sortedResults[i]['title'])
+      var text = sortedResults[i]['title'].split('-')[0] + ' '
       // var text =  'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'];
 
       if(uniquePapers.includes(text)==false){
