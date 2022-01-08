@@ -51,6 +51,13 @@
     box-shadow: inset -1px -8px 20px 0px #e5a461;
 }
 
+.dashboardDivInside{
+    background-color: white;
+    padding: 0.8rem;
+    border-radius: 8px;
+    overflow: scroll;
+}
+
 .questionDiv{
     display: grid;
     grid-template-columns: 40px auto 130px;
@@ -65,24 +72,12 @@
     margin-bottom: 2rem;
 }
 
-.insightsDashboardDiv div{
-    overflow: auto;
-    padding: 1rem;
-    background-color: white;
+.loadingText{
+    color: gray;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 1rem;
 }
-
-.tabs{
-    display: grid;
-    grid-template-columns: 205px 123px;
-}
-
-.tabs div{
-    background: white;
-    padding: 0.5rem;
-    cursor: pointer;
-
-}
-
 
 .tag{
     display: inline-block;
@@ -99,13 +94,16 @@
 
 .dashboardSelect{
     float: right;
-    border: none;
-    padding: 0.5rem;
+    padding: 0.2rem;
+    cursor: pointer;
 }
 
 .insightsDashboardTitle{
     display: grid;
     grid-template-columns: 1fr 100px;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .questionDiv p{
@@ -164,7 +162,7 @@
 
 .questionDiv img{
    margin:01rem;
-   max-width: 60vw;
+   max-width: 70vw;
 }
 
 .marksText{

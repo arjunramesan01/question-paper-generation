@@ -51,8 +51,8 @@ const QuestionPaper: NextPage = () => {
     var [markingAssist, setMarkingAssist] = useState(null);
     var [dashboardMatrix, setDashboardMatrix] = useState(null);
     var [dashboardType, setDashboardType] = useState('count');
+    var [wholeData, setWholeData] = useState(null);
     var [openDahboardPanel, setOpenDahboardPanel] = useState(false);
-    var [historicalClicked, setHistoricalClicked] = useState(false);
     var [filterSelected, setFilterSelected] = useState(null);
     const alphabet = ['A','B','C','D','E'];
     const bloomsMapping = [
@@ -104,6 +104,8 @@ const QuestionPaper: NextPage = () => {
     function generateGraph2(data, type, assesmentDetailsLocal){
 
         // Old chart //
+
+        console.log(type);
 
         if(!data){
             data = questionsList;
@@ -245,7 +247,12 @@ const QuestionPaper: NextPage = () => {
     }
 
     async function doTask(similar_papers, labels, old_graph_data, type){
-        let result = await getDetails(similar_papers);
+        let result = wholeData;
+        if(!result){
+            result = await getDetails(similar_papers);
+            setWholeData(result);
+        }
+
         var average_list = []
         var totalPapers = result.length;
 
@@ -259,13 +266,13 @@ const QuestionPaper: NextPage = () => {
                 for(var j=0;j<data[i]['groups'].length;j++){
                     for(var k=0;k<data[i]['groups'][j]['questions'].length;k++){
                         for(var l=0;l<labels.length;l++){
-                            if(type == 'Chapters'){
-                                if(labels[l] == data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']){
+                            if(type == 'Topic'){
+                                if(labels[l] == data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
                                     average_list[l] += data[i]['groups'][j]['questions'][k]['question']['marks']
                                 }
                             }
                             else{
-                                if(labels[l] == data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['topic']){
+                                if(labels[l] == data[i]['groups'][j]['questions'][k]['question']['matchingRelation']['chapter']){
                                     average_list[l] += data[i]['groups'][j]['questions'][k]['question']['marks']
                                 }
                             }
@@ -290,6 +297,8 @@ const QuestionPaper: NextPage = () => {
         var historicalDataSet = old_graph_data;
         historicalDataSet['datasets'][1]['data'] = newDataset
         setGraph2data(historicalDataSet)
+
+        console.log(newDataset)
     }
 
 
@@ -658,22 +667,19 @@ const QuestionPaper: NextPage = () => {
         <>
         <div className={styles.topDashboardDiv}>
             <div className={styles.paperContainer}>
-                <div className={styles.insightsDashboardTitle}>
-                    <div className={styles.tabs}>
-                        <div style={!historicalClicked ? {backgroundColor: 'white'} : {backgroundColor: '#d9d9d9'}} onClick={()=>{setHistoricalClicked(false)}}>Top Questions by {selectedDashboardView}</div>
-                        <div style={historicalClicked ? {backgroundColor: 'white'} : {backgroundColor: '#d9d9d9'}} onClick={()=>{setHistoricalClicked(true)}}>Historical Data</div>
-                    </div>
-                    <div>
-                        <select className={styles.dashboardSelect} value={selectedDashboardView}
-                        onChange={(e) => {setSelectedDashboardView(e.target.value); generateGraph1(null, e.target.value); generateGraph2(null, e.target.value, null);}}>
-                            <option value="Chapter">Chapter</option>
-                            <option value="Topic">Topic</option>
-                        </select>
-                    </div>
-                </div>
                 <div className={styles.insightsDashboardDiv}>
-                    <div>
-                    { graph1data && historicalClicked==false &&
+                    <div className={styles.dashboardDivInside}>
+                        <div className={styles.insightsDashboardTitle}>
+                            <div>Top Questions by {selectedDashboardView}</div>
+                            <div>
+                                <select className={styles.dashboardSelect} value={selectedDashboardView}
+                                onChange={(e) => {setSelectedDashboardView(e.target.value); generateGraph1(null, e.target.value); generateGraph2(null, e.target.value, null);}}>
+                                    <option value="Chapter">Chapter</option>
+                                    <option value="Topic">Topic</option>
+                                </select>
+                            </div>
+                        </div>
+                    { !graph2data && graph1data &&
                         <Bar
                             data={graph1data}
                             width={400}
@@ -692,7 +698,7 @@ const QuestionPaper: NextPage = () => {
                             }}
                         />
                     }
-                    { historicalClicked && graph2data && 
+                    { graph2data && 
                         <>
                         <Bar
                            data={graph2data}
@@ -713,8 +719,9 @@ const QuestionPaper: NextPage = () => {
                         />
                         </>
                     }
+                    {!graph2data && <div className={styles.loadingText}>Loading historical average...</div>}
                     </div>
-                    <div>
+                    <div className={styles.dashboardDivInside}>
                         <span dangerouslySetInnerHTML={{ __html: summarytext}}></span>
                         <a href="https://byjus.com/" rel="noreferrer" target="_blank">
                             <div className={styles.ctaBanner}>
