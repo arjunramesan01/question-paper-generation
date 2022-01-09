@@ -133,7 +133,12 @@ const Home: NextPage = () => {
         setTextEntities(tempIntentArry);
         setStatus('');
         document.getElementById('searchInput').value = input;
+        
+      }).catch(res => {
+        setStatus('');
+        document.getElementById('searchInput').value = input;
       });
+
     }).catch(res => {
       setStatus('');
       document.getElementById('searchInput').value = input;
