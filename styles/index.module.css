@@ -211,6 +211,10 @@
     width: 70vw;
   }
 
+  .graphHolder{
+    max-width: 70vw;
+  }
+
   @keyframes expand {
     from {
       width: 50vw;
