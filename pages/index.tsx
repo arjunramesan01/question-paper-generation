@@ -136,11 +136,13 @@ const Home: NextPage = () => {
         document.getElementById('searchInput').value = input;
 
       }).catch(res => {
+        getQuestionPaper(input.split(' '))
         setStatus('');
         document.getElementById('searchInput').value = input;
       });
 
     }).catch(res => {
+      getQuestionPaper(input.split(' '))
       setStatus('');
       document.getElementById('searchInput').value = input;
     });
