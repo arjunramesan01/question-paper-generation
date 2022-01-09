@@ -85,7 +85,8 @@
   border-radius: 35px;
   border: solid 2px grey;
   padding: 5px;
-  animation: expand 1.5s forwards;
+  width: 40vw;
+  /* animation: expand 1.5s forwards; */
 }
 
 .centerAlign{
@@ -139,11 +140,12 @@
 
 .entititesBox{
   border: solid 1px #cdcdcd;
-  padding: 0.5rem;
+  padding: 0.4rem;
   border-radius: 15px;
   display: inline-block;
-  margin-right: 1rem;
-  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  
 }
 
 .intentBox{
@@ -153,6 +155,8 @@
   border-radius: 15px;
   font-size: 0.8rem;
   margin-left: 0.5rem;
+  background-image: linear-gradient(to right, #9059fd, #678afe);
+  color: white;
 }
 
 .graphHolder{
@@ -201,6 +205,10 @@
 
   .transcript{
     max-width: none;
+  }
+
+  .searchBarDiv{
+    width: 70vw;
   }
 
   @keyframes expand {
