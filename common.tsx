@@ -19,7 +19,7 @@ export function getQuestionPaperDetails(id:any){
 }
 
 export function getIntent(text:any){
-    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/intent_detections/', {
+    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/intent_detection/', {
         method: 'POST',
         body: JSON.stringify({
             'text' : text
@@ -31,7 +31,7 @@ export function getIntent(text:any){
 }
 
 export function getEntity(text:any){
-    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/entity_extractions/', {
+    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/entity_extraction/', {
         method: 'POST',
         body: JSON.stringify({
             'text' : text
