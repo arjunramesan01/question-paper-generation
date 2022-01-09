@@ -134,6 +134,9 @@ const Home: NextPage = () => {
         setStatus('');
         document.getElementById('searchInput').value = input;
       });
+    }).catch(res => {
+      setStatus('');
+      document.getElementById('searchInput').value = input;
     });
 
 
