@@ -27,6 +27,15 @@ export function getIntent(text:any){
     });
 }
 
+export function getEntity(text:any){
+    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/entity_extraction/?text=' + text, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+
 export function titleGenerator(text:any){
     try{
         return text.replace(/-/g, ' ');

@@ -1,7 +1,7 @@
 .searchBarContainer{
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 110vh;
   padding: 1rem;
   padding-top: 20vh;
 }
@@ -131,6 +131,28 @@
   cursor: pointer;
   display: grid;
   grid-template-columns: 1fr 20px;
+}
+
+.textBox{
+  display: inline-block;
+}
+
+.entititesBox{
+  border: solid 1px #cdcdcd;
+  padding: 0.5rem;
+  border-radius: 15px;
+  display: inline-block;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.intentBox{
+  display: inline-block;
+  background: #dddddd;
+  padding: 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
 }
 
 .graphHolder{

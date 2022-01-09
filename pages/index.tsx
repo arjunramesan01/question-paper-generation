@@ -2,7 +2,7 @@
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import styles from '../styles/index.module.css'
-import {getAllAssesments, titleGenerator, getIntent} from '../common';
+import {getAllAssesments, titleGenerator, getIntent, getEntity} from '../common';
 import {useState} from "react";
 import { useRouter } from 'next/router'
 import 'regenerator-runtime/runtime'
@@ -39,6 +39,7 @@ const Home: NextPage = () => {
   var [loadingText, setLoadingText] = useState('Detecting intent...');
   var [micClicked, setMicClicked] = useState(false);
   var [graphData, setGraphData] = useState(null);
+  var [textEntities, setTextEntities] = useState([])
   const router = useRouter();
   const commands = [
     {
@@ -71,6 +72,7 @@ const Home: NextPage = () => {
     setTopMatches([])
     setMicClicked(false);
     setGraphData(null);
+    setTextEntities([]);
 
     var input = text;
     if(!text){
@@ -88,7 +90,7 @@ const Home: NextPage = () => {
       var labels = [];
       var marksData = [];
 
-      var count = 6;
+      var count = 5;
 
       if(res['intents']){
         for(var i=0;i<res['intents'].length;i++){
@@ -118,12 +120,20 @@ const Home: NextPage = () => {
       }
 
       setGraphData(data);
-      setStatus('');
-      document.getElementById('searchInput').value = input;
-
       getQuestionPaper(input.split(' '))
 
-
+      getEntity(input).then(r=>r.json()).then(res=>{
+        var tempIntentArry = []
+        for(var i=res['entities'].length-1; i>-1; i--){
+          tempIntentArry.push({
+            'entity' : res['entities'][i]['entity'],
+            'intent' : res['entities'][i]['intent'].split('_').join(' ')
+          })
+        }
+        setTextEntities(tempIntentArry);
+        setStatus('');
+        document.getElementById('searchInput').value = input;
+      });
     });
 
 
@@ -323,7 +333,8 @@ const Home: NextPage = () => {
           <div className={styles.loaderImageText}>{loadingText}</div>
         </div>
         }
-        {graphData &&
+        {status!='detecting' &&  graphData &&
+
         <div className={styles.graphHolder}>
           <Bar
             data={graphData}
@@ -342,6 +353,13 @@ const Home: NextPage = () => {
                 }
             }}
           />
+          <br></br>
+          {textEntities.map((el,i) =>
+            <div className={styles.entititesBox}>
+              <div className={styles.textBox}>{el['entity']}</div>
+              <div className={styles.intentBox}>{el['intent']}</div>
+            </div>
+          )}
           </div>
         }
         { status!='detecting' && topMatches.length>0 &&
