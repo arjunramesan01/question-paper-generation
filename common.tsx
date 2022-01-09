@@ -38,7 +38,9 @@ export function getEntity(text:any){
 
 export function titleGenerator(text:any){
     try{
-        return text.replace(/-/g, ' ');
+        var n_text = text.replace(/-/g, ' ');
+        n_text = n_text.replace('(Series _),Code _', '');
+        return n_text
     }
     catch(err){
       return text
