@@ -133,9 +133,17 @@
   grid-template-columns: 1fr 20px;
 }
 
+.graphHolder{
+  padding: 1rem;
+  overflow: auto;
+  max-width: 40rem;
+  margin: auto;
+  margin-top: 1rem;
+}
+
 @keyframes expand {
   from {
-    width: 15vw;
+    width: 30vw;
     opacity: 0;
   }
   to {
@@ -175,7 +183,7 @@
 
   @keyframes expand {
     from {
-      width: 15vw;
+      width: 50vw;
       opacity: 0;
     }
     to {

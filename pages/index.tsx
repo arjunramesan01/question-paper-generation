@@ -2,11 +2,35 @@
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import styles from '../styles/index.module.css'
-import {getAllAssesments, titleGenerator} from '../common';
+import {getAllAssesments, titleGenerator, getIntent} from '../common';
 import {useState} from "react";
 import { useRouter } from 'next/router'
 import 'regenerator-runtime/runtime'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+  LineController,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement,
+  LineElement,
+  LineController
+);
 
 const Home: NextPage = () => {
 
@@ -14,6 +38,7 @@ const Home: NextPage = () => {
   var [topMatches, setTopMatches] = useState([]);
   var [loadingText, setLoadingText] = useState('Detecting intent...');
   var [micClicked, setMicClicked] = useState(false);
+  var [graphData, setGraphData] = useState(null);
   const router = useRouter();
   const commands = [
     {
@@ -45,6 +70,7 @@ const Home: NextPage = () => {
     setLoadingText('Detecting intent...');
     setTopMatches([])
     setMicClicked(false);
+    setGraphData(null);
 
     var input = text;
     if(!text){
@@ -57,51 +83,96 @@ const Home: NextPage = () => {
       return
     }
 
-    var text = input.replace(/\s+$/, '');;
-    var textArray = text.split(' ');
-    var boardList = ['cbse', 'ncert'];
-    var yearList = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021', 'papers', 'paper'];
-    var subjectList = ['maths', 'chemistry', 'biology', 'physics', 'history', 'mathematics'];
-    var gradeList = ['iv', 'v', 'vi', 'i', 'ii', 'iii', 'vii', 'viii', 'ix', 'x','xi', 'xii']
-    var importantQuestionPhrases = ['question', 'questions', 'important']
+    getIntent(input).then(r=>r.json()).then(res=>{
+      console.log(res);
+      var labels = [];
+      var marksData = [];
 
-    var questionPaperScore = 0;
-    var importantQuestionScore = 0;
-    var questionScore = 0;
+      var count = 6;
 
-
-    for(var i=0;i<textArray.length;i++){
-      if(boardList.includes(textArray[i].toLocaleLowerCase()) || yearList.includes(textArray[i].toLocaleLowerCase())  || subjectList.includes(textArray[i].toLocaleLowerCase()) || gradeList.includes(textArray[i].toLocaleLowerCase())){
-        questionPaperScore++;
+      if(res['intents']){
+        for(var i=0;i<res['intents'].length;i++){
+          count--;
+          if(count<0){
+            break;
+          }
+          labels.push(res['intents'][i]['intent'])
+          marksData.push(parseFloat(res['intents'][i]['score']).toFixed(2))
+        }
       }
 
-      if(importantQuestionPhrases.includes(textArray[i].toLocaleLowerCase()) || subjectList.includes(textArray[i])){
-        importantQuestionScore++;
+
+      var data = {
+        labels: labels,
+        datasets: [{
+          label: 'Intent',
+          data: marksData,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.2)',
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+          ],
+          borderWidth: 1
+        }]
       }
 
-    }
+      setGraphData(data);
+      setStatus('');
+      document.getElementById('searchInput').value = input;
 
-    window.setTimeout(()=>{
-      if((questionPaperScore > importantQuestionScore) && (questionPaperScore > questionScore)){
-        setLoadingText('Loading question papers...');
-        getQuestionPaper(textArray);
-      }
-      else if((importantQuestionScore > questionPaperScore) && (importantQuestionScore > questionScore)){
-        setLoadingText('Loading textbook questions...');
-        window.setTimeout(()=>{
-          setStatus('');
-        },1000)
-      }
-      else if(((questionScore > importantQuestionScore) && (questionScore > questionPaperScore)) || (questionScore==0 && importantQuestionScore==0 && questionPaperScore==0)){
-        setLoadingText('Loading solution...');
-        window.setTimeout(()=>{
-          setStatus('');
-        },1000)
-      }
-      else{
-        noMatch();
-      }
-    },1000)
+      getQuestionPaper(input.split(' '))
+
+
+    });
+
+
+
+    // var text = input.replace(/\s+$/, '');;
+    // var textArray = text.split(' ');
+    // var boardList = ['cbse', 'ncert'];
+    // var yearList = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021', 'papers', 'paper'];
+    // var subjectList = ['maths', 'chemistry', 'biology', 'physics', 'history', 'mathematics'];
+    // var gradeList = ['iv', 'v', 'vi', 'i', 'ii', 'iii', 'vii', 'viii', 'ix', 'x','xi', 'xii']
+    // var importantQuestionPhrases = ['question', 'questions', 'important']
+
+    // var questionPaperScore = 0;
+    // var importantQuestionScore = 0;
+    // var questionScore = 0;
+
+
+    // for(var i=0;i<textArray.length;i++){
+    //   if(boardList.includes(textArray[i].toLocaleLowerCase()) || yearList.includes(textArray[i].toLocaleLowerCase())  || subjectList.includes(textArray[i].toLocaleLowerCase()) || gradeList.includes(textArray[i].toLocaleLowerCase())){
+    //     questionPaperScore++;
+    //   }
+
+    //   if(importantQuestionPhrases.includes(textArray[i].toLocaleLowerCase()) || subjectList.includes(textArray[i])){
+    //     importantQuestionScore++;
+    //   }
+
+    // }
+
+    // window.setTimeout(()=>{
+    //   if((questionPaperScore > importantQuestionScore) && (questionPaperScore > questionScore)){
+    //     setLoadingText('Loading question papers...');
+    //     getQuestionPaper(textArray);
+    //   }
+    //   else if((importantQuestionScore > questionPaperScore) && (importantQuestionScore > questionScore)){
+    //     setLoadingText('Loading textbook questions...');
+    //     window.setTimeout(()=>{
+    //       setStatus('');
+    //     },1000)
+    //   }
+    //   else if(((questionScore > importantQuestionScore) && (questionScore > questionPaperScore)) || (questionScore==0 && importantQuestionScore==0 && questionPaperScore==0)){
+    //     setLoadingText('Loading solution...');
+    //     window.setTimeout(()=>{
+    //       setStatus('');
+    //     },1000)
+    //   }
+    //   else{
+    //     noMatch();
+    //   }
+    // },1000)
   }
 
   function noMatch(){
@@ -131,29 +202,8 @@ const Home: NextPage = () => {
         return
      }
 
-     if(res['assessments']['evaluated']){
-      for(var i=0;i<res['assessments']['evaluated'].length;i++){
-          // var check1arr = [res['assessments']['evaluated'][i]['grade'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['board'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['subject'].toLocaleLowerCase()]
-          var check1arr = [res['assessments']['evaluated'][i]['grade'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['board'].toLocaleLowerCase(), res['assessments']['evaluated'][i]['subject'].toLocaleLowerCase()]
-
-          var MatchCount = 0;
-          for(var j=0;j<textArray.length;j++){
-            for(var k=0;k<check1arr.length;k++){
-              if(check1arr[k].includes(textArray[j].toLocaleLowerCase())){
-                MatchCount++;
-              }
-            }
-          }
-          if(MatchCount>0){
-            res['assessments']['evaluated'][i]['matchScore'] = MatchCount
-            matches.push(res['assessments']['evaluated'][i])
-          }
-      }
-    }
-
     if(res['assessments']['draft']){
       for(var i=0;i<res['assessments']['draft'].length;i++){
-        // var check1arr = [res['assessments']['draft'][i]['grade'].toLocaleLowerCase(), res['assessments']['draft'][i]['board'].toLocaleLowerCase(), res['assessments']['draft'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['draft'][i]['subject'].toLocaleLowerCase()]
         var check1arr = [res['assessments']['draft'][i]['grade'].toLocaleLowerCase(), res['assessments']['draft'][i]['board'].toLocaleLowerCase(), res['assessments']['draft'][i]['subject'].toLocaleLowerCase()]
           var MatchCount = 0;
           for(var j=0;j<textArray.length;j++){
@@ -170,24 +220,6 @@ const Home: NextPage = () => {
       }
     }
 
-    if(res['assessments']['correcting']){
-      for(var i=0;i<res['assessments']['correcting'].length;i++){
-          // var check1arr = [res['assessments']['correcting'][i]['grade'].toLocaleLowerCase(), res['assessments']['correcting'][i]['board'].toLocaleLowerCase(), res['assessments']['correcting'][i]['academicYear'].toLocaleLowerCase(), res['assessments']['correcting'][i]['subject'].toLocaleLowerCase()]
-          var check1arr = [res['assessments']['correcting'][i]['grade'].toLocaleLowerCase(), res['assessments']['correcting'][i]['board'].toLocaleLowerCase(), res['assessments']['correcting'][i]['subject'].toLocaleLowerCase()]
-          var MatchCount = 0;
-          for(var j=0;j<textArray.length;j++){
-            for(var k=0;k<check1arr.length;k++){
-              if(check1arr[k].includes(textArray[j].toLocaleLowerCase())){
-                MatchCount++;
-              }
-            }
-          }
-          if(MatchCount>0){
-            res['assessments']['correcting'][i]['matchScore'] = MatchCount
-            matches.push(res['assessments']['correcting'][i])
-          }
-      }
-    }
 
     var sortedResults = sortResults(matches,'matchScore',false)
     var counter = 0;
@@ -198,21 +230,16 @@ const Home: NextPage = () => {
       if(counter>8){
         break
       }
-
-      console.log(sortedResults[i]['title'])
-
       var text = titleGenerator(sortedResults[i]['title'])
-      // var text = sortedResults[i]['title'].split('-')[0] + ' '
-      // var text =  'Grade ' + sortedResults[i]['grade'] + " " + sortedResults[i]['subject'] + ' ' + sortedResults[i]['board'];
-
-      if(uniquePapers.includes(text)==false){
+      var checker = sortedResults[i]['title'].split('-')[0] + sortedResults[i]['title'].split('-')[1] + sortedResults[i]['title'].split('-')[2] + sortedResults[i]['title'].split('-')[3] + sortedResults[i]['title'].split('-')[4]
+      if(uniquePapers.includes(checker)==false){
         filteredList.push({
           text : text,
           id : sortedResults[i]['id'],
           type : 'questionPaper'
         })
   
-        uniquePapers.push(text)
+        uniquePapers.push(checker)
       }
 
     }
@@ -295,6 +322,27 @@ const Home: NextPage = () => {
           <div className={styles.loaderImageDiv}><Image src="/images/loader3.gif" layout='fill'></Image></div>
           <div className={styles.loaderImageText}>{loadingText}</div>
         </div>
+        }
+        {graphData &&
+        <div className={styles.graphHolder}>
+          <Bar
+            data={graphData}
+            width={400}
+            height={200}
+            options={{
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: function(value, index, values) {
+                                var newString = graphData['labels'][index].split('_intent')[0]
+                                return newString;//truncate
+                            },
+                        }
+                    },
+                }
+            }}
+          />
+          </div>
         }
         { status!='detecting' && topMatches.length>0 &&
         <>

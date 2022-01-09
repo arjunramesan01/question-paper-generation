@@ -19,8 +19,8 @@ export function getQuestionPaperDetails(id:any){
 }
 
 export function getIntent(text:any){
-    return fetch('http://3.236.125.119:5600/byjus/ml/universal_search/v0/intent_detection/?text=' + text, {
-        method: 'GET',
+    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/intent_detection/?text=' + text, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
