@@ -19,8 +19,11 @@ export function getQuestionPaperDetails(id:any){
 }
 
 export function getIntent(text:any){
-    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/intent_detection/?text=' + text, {
+    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/intent_detection/', {
         method: 'POST',
+        body: JSON.stringify({
+            'text' : text
+        }),
         headers: {
             'Content-Type': 'application/json',
         },
@@ -28,8 +31,11 @@ export function getIntent(text:any){
 }
 
 export function getEntity(text:any){
-    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/entity_extraction/?text=' + text, {
+    return fetch('http://44.200.171.242:5600/byjus/ml/universal_search/v0/entity_extraction/', {
         method: 'POST',
+        body: JSON.stringify({
+            'text' : text
+        }),
         headers: {
             'Content-Type': 'application/json',
         },
