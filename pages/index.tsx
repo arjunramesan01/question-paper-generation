@@ -355,7 +355,7 @@ const Home: NextPage = () => {
           />
           <br></br>
           {textEntities.map((el,i) =>
-            <div className={styles.entititesBox}>
+            <div key={'intent' + '_'  + i} className={styles.entititesBox}>
               <div className={styles.textBox}>{el['entity']}</div>
               <div className={styles.intentBox}>{el['intent']}</div>
             </div>
