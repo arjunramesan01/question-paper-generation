@@ -8,7 +8,7 @@
 
 .searchBarContainer h1{
   text-align: center;
-  animation: makeVisible 1.5s forwards;
+  /* animation: makeVisible 1.5s forwards; */
 }
 
 .blinkRed{
@@ -20,7 +20,7 @@
   margin-right: 0.2rem;
   vertical-align: middle;
   background-color: red;
-  animation: makeVisible_blink 1s infinite;
+  /* animation: makeVisible_blink 1s infinite; */
 }
 
 .listeningDiv{
@@ -212,7 +212,7 @@
   }
 
   .graphHolder{
-    max-width: 70vw;
+    max-width: 100vw;
   }
 
   @keyframes expand {

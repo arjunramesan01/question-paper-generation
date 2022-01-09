@@ -106,6 +106,7 @@ const Home: NextPage = () => {
 
       var data = {
         labels: labels,
+       
         datasets: [{
           label: 'Intent',
           data: marksData,
@@ -133,7 +134,7 @@ const Home: NextPage = () => {
         setTextEntities(tempIntentArry);
         setStatus('');
         document.getElementById('searchInput').value = input;
-        
+
       }).catch(res => {
         setStatus('');
         document.getElementById('searchInput').value = input;
@@ -349,6 +350,11 @@ const Home: NextPage = () => {
             width={400}
             height={200}
             options={{
+                plugins: {
+                  legend: {
+                    display: false
+                  }
+                },
                 scales: {
                     x: {
                         ticks: {
