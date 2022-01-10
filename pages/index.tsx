@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import Image from 'next/image'
 import styles from '../styles/index.module.css'
 import {getAllAssesments, titleGenerator, getIntent, getEntity} from '../common';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from 'next/router'
 import 'regenerator-runtime/runtime'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
@@ -39,7 +39,8 @@ const Home: NextPage = () => {
   var [loadingText, setLoadingText] = useState('Detecting intent...');
   var [micClicked, setMicClicked] = useState(false);
   var [graphData, setGraphData] = useState(null);
-  var [textEntities, setTextEntities] = useState([])
+  var [textEntities, setTextEntities] = useState([]);
+  var [textBookData, setTextBookData] = useState(null);
   const router = useRouter();
   const commands = [
     {
@@ -56,6 +57,19 @@ const Home: NextPage = () => {
   } = useSpeechRecognition({commands});
   const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
+  useEffect(()=>{
+    console.log('hi');
+    var data = require('../public/json/convertcsv.json');
+    var tempArray = [];
+    for(var i=0;i<data.length;i++){
+      tempArray[data[i]['book']] = [];
+    }
+    var counter = 0;
+    for(var key in tempArray){
+      tempArray[key] = counter;
+      counter++;
+    }
+  },[])
 
   function speechDetect(text){
     document.getElementById('searchInput').value = text;
