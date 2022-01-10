@@ -1,0 +1,36 @@
+.bookTitle{
+    background-color: #ffcd72;
+    color: #4d3200;
+    -webkit-box-shadow: inset -1px -8px 20px 0 #e5a461;
+    box-shadow: inset -1px -8px 20px 0 #e5a461;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 2rem 0;
+}
+
+.bodyContainer{
+    width: 70vw;
+    margin: auto;
+}
+
+.chapterDiv{
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    padding: 1rem;
+    margin-top: 2rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.topicDiv{
+    color: #545454;
+    font-weight: normal;
+    margin-top: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .bodyContainer{
+        width: 90vw;
+    }
+    
+}

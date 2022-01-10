@@ -58,3 +58,18 @@ th, td{
   max-height: 60vh;
   overflow: auto;
 }
+
+.accordion {
+ border: none!important;
+}
+
+.accordion__button {
+  margin-bottom: 1rem;
+  border-radius: 10px;
+}
+
+.accordion__item{
+  background: #f4f4f4;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}

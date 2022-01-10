@@ -36,6 +36,7 @@ const Home: NextPage = () => {
 
   var [status, setStatus] = useState('');
   var [topMatches, setTopMatches] = useState([]);
+  var [topMatchesTextbook, setTopMatchesTextbook] = useState([]);
   var [loadingText, setLoadingText] = useState('Detecting intent...');
   var [micClicked, setMicClicked] = useState(false);
   var [graphData, setGraphData] = useState(null);
@@ -58,7 +59,6 @@ const Home: NextPage = () => {
   const startListening = () => SpeechRecognition.startListening({ continuous: false });
 
   useEffect(()=>{
-    console.log('hi');
     var data = require('../public/json/convertcsv.json');
     var tempArray = [];
     for(var i=0;i<data.length;i++){
@@ -69,6 +69,8 @@ const Home: NextPage = () => {
       tempArray[key] = counter;
       counter++;
     }
+
+    setTextBookData(tempArray);
   },[])
 
   function speechDetect(text){
@@ -136,6 +138,7 @@ const Home: NextPage = () => {
 
       setGraphData(data);
       getQuestionPaper(input.split(' '))
+      getTextbooks(input);
 
       getEntity(input).then(r=>r.json()).then(res=>{
         var tempIntentArry = []
@@ -150,13 +153,15 @@ const Home: NextPage = () => {
         document.getElementById('searchInput').value = input;
 
       }).catch(res => {
-        getQuestionPaper(input.split(' '))
+        getQuestionPaper(input.split(' '));
+        getTextbooks(input);
         setStatus('');
         document.getElementById('searchInput').value = input;
       });
 
     }).catch(res => {
-      getQuestionPaper(input.split(' '))
+      getQuestionPaper(input.split(' '));
+      getTextbooks(input);
       setStatus('');
       document.getElementById('searchInput').value = input;
     });
@@ -281,19 +286,69 @@ const Home: NextPage = () => {
 
     // @ts-ignore
     setTopMatches(filteredList);
-    if(filteredList.length==0){
-      noMatch();
-    }
-
     window.setTimeout(()=>{
       setStatus('');
     },1000);
    })
   }
 
+  function getTextbooks(text:any){
+    var textArray = text.split(' ');
+    var scoreCounter = []
+    for(var key in textBookData){
+      scoreCounter[key] = {
+        'id' : textBookData[key],
+        'score' : 0
+      }
+    }
+
+    for(var i=0;i<textArray.length;i++){
+      for(var key in textBookData){
+        var keyArray = key.split(" ");
+        for(var j=0;j<keyArray.length;j++){
+            if(textArray[i].toLocaleLowerCase() == keyArray[j].toLocaleLowerCase()){
+              scoreCounter[key]['score'] += 1;
+            }
+        }
+      }
+    }
+
+    var finalArray = [];
+
+    for(var key in scoreCounter){
+      finalArray.push({
+        'key' : key,
+        'score' : scoreCounter[key]['score'],
+        'id' : scoreCounter[key]['id']
+      })  
+    }
+
+    var sortedResults = sortResults(finalArray,'score',false);
+
+    var counter = 5;
+
+    var finalResult = []
+
+    for(var i=0;i<counter;i++){
+        finalResult.push({
+          'type' : 'textbook',
+          'id' : sortedResults[i]['id'],
+          'text' : sortedResults[i]['key']
+        })
+    }
+
+    setTopMatchesTextbook(finalResult);
+  }
+
   function openPage(type:any, id:any){
-    var href = '/question-paper/' + id;
-    router.push(href)
+    if(type == 'questionPaper'){
+      var href = '/question-paper/' + id;
+      router.push(href)
+    }
+    else{
+      var href = '/textbook/' + id;
+      router.push(href)
+    }
   }
 
   function keyPressed(event:any){
@@ -392,11 +447,29 @@ const Home: NextPage = () => {
           )}
           </div>
         }
-        { status!='detecting' && topMatches.length>0 &&
+        { status!='detecting' && (topMatches.length>0 || topMatchesTextbook.length>0) &&
         <>
         <div className={styles.topMatches}>
           <h3>Top Matches : </h3>
+          {topMatches.length>0 && <p>Exam papers</p>}
           {topMatches.map((el,i) =>
+            <div key={'suggest_' + i} className={styles.topMatchesDiv} onClick={() => {openPage(el['type'], el['id'])}}>
+              <div>
+                <span>{el['text']}</span>
+              </div>
+              <div>
+                <span><Image src="/images/right-chiron.png" height="20" width="20"></Image></span>
+              </div>
+            </div>
+          )}
+          {topMatches.length>0 && <br></br>}
+
+          {topMatchesTextbook.length>0 && 
+          <>
+          <p>Textbooks</p>
+          </> 
+          }
+          {topMatchesTextbook.map((el,i) =>
             <div key={'suggest_' + i} className={styles.topMatchesDiv} onClick={() => {openPage(el['type'], el['id'])}}>
               <div>
                 <span>{el['text']}</span>
