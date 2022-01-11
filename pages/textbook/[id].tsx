@@ -104,7 +104,13 @@ const Textbook: NextPage = () => {
                         </AccordionItemButton>
                     </AccordionItemHeading>
                     <AccordionItemPanel>
-                        <Slider {...settings}>
+                        <Slider {...{
+                                dots: true,
+                                infinite: true,
+                                speed: 500,
+                                slidesToShow: (el['topics'].length>=3 ? 3 : el['topics'].length),
+                                slidesToScroll: 1
+                        }}>
                         {el['topics'].map((el,a) =>
                             <div key={'topic_' + a} className={styles.topicDiv}>
                                 <div className={styles.topicDiv2}>
