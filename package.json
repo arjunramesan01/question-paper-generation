@@ -17,11 +17,13 @@
     "react-chartjs-2": "^4.0.0",
     "react-dom": "17.0.2",
     "react-katex": "^2.0.2",
+    "react-slick": "^0.28.1",
     "react-sliding-side-panel": "^2.0.3",
     "react-speech-recognition": "^3.9.0",
     "reactjs-popup": "^2.0.5",
     "regenerator-runtime": "^0.13.9",
-    "request-promise": "^4.2.6"
+    "request-promise": "^4.2.6",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@types/node": "17.0.4",

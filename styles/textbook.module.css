@@ -23,9 +23,24 @@
 }
 
 .topicDiv{
-    color: #545454;
-    font-weight: normal;
-    margin-top: 1rem;
+    padding: 1rem;
+}
+.topicDiv2{
+    color: #1f1f1f;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    background-color: white;
+    cursor: pointer;
+}
+
+
+.thumbnailDiv{
+    width: 100%;
+    margin-top: 0.5rem;
+    position: relative;
+    height: 9rem;
+    background-color: black;
 }
 
 @media only screen and (max-width: 600px) {

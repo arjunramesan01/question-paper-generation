@@ -52,7 +52,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: makeVisible 1.5s forwards;
+  /* animation: makeVisible 1.5s forwards; */
 }
 
 .microphoneDiv{

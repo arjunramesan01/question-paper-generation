@@ -1,7 +1,6 @@
 // @ts-nocheck
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
 import styles from '../../styles/textbook.module.css'
 import {useEffect, useState} from "react";
 import {
@@ -12,19 +11,30 @@ import {
     AccordionItemPanel,
 } from 'react-accessible-accordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+import dynamic from "next/dynamic";
+const Image = dynamic(() => import('next/image'));
 
 const Textbook: NextPage = () => {
     const router = useRouter();
     const { id } = router.query;
     var [currentTextbookData, setCurrentTextBookData] = useState([]);
+    var settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1
+    };
 
     useEffect(()=>{
         if(id){
             var data = require('../../public/json/convertcsv.json');
-            console.log(data[id]);
             var bookname = data[id]['book'];
             var currentbookArray = {}
-
             for(var i=0;i<data.length;i++){
                 if(data[i]['book'] == bookname){
                     currentbookArray[data[i]['chapter']] = []
@@ -70,7 +80,6 @@ const Textbook: NextPage = () => {
             }
 
             setCurrentTextBookData(finalArray);
-            console.log(finalArray)
         }
        
       },[router.query.id])
@@ -88,31 +97,27 @@ const Textbook: NextPage = () => {
                 <h4>Chapters</h4>
                 <Accordion allowZeroExpanded>
                 {currentTextbookData.map((el,a) =>
-                <>
-                    <AccordionItem>
-                        <AccordionItemHeading>
-                            <AccordionItemButton>
-                                {el['chapter']}
-                            </AccordionItemButton>
-                        </AccordionItemHeading>
-                        <AccordionItemPanel>
-                            {el['topics'].map((el,a) =>
-                                <>
-                                <div className={styles.topicDiv}>
-                                    {el['name']}
-                                    {el['thumbnail'].map((el,a) => 
-                                    <>
+                <AccordionItem key={'acc_' + a}> 
+                    <AccordionItemHeading>
+                        <AccordionItemButton>
+                            {el['chapter']}
+                        </AccordionItemButton>
+                    </AccordionItemHeading>
+                    <AccordionItemPanel>
+                        <Slider {...settings}>
+                        {el['topics'].map((el,a) =>
+                            <div key={'topic_' + a} className={styles.topicDiv}>
+                                <div className={styles.topicDiv2}>
+                                    <span>{el['name']}</span>
                                     <div className={styles.thumbnailDiv}>
-                                        <Image src={el} height="50" width="50"></Image>
+                                    { el['thumbnail'][0] &&   <Image src={el['thumbnail'][0]} layout='fill'></Image>}
                                     </div>
-                                    </>
-                                    )}
                                 </div>
-                                </>
-                            )}
-                        </AccordionItemPanel>
-                    </AccordionItem>
-                </>
+                            </div>
+                        )}    
+                        </Slider>
+                    </AccordionItemPanel>
+                </AccordionItem>
                 )}         
                 </Accordion>           
             </div>

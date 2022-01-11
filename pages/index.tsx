@@ -1,12 +1,15 @@
 // @ts-nocheck
 import type { NextPage } from 'next'
-import Image from 'next/image'
 import styles from '../styles/index.module.css'
 import {getAllAssesments, titleGenerator, getIntent, getEntity} from '../common';
 import {useEffect, useState} from "react";
 import { useRouter } from 'next/router'
 import 'regenerator-runtime/runtime'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
+import dynamic from "next/dynamic";
+const Image = dynamic(() => import('next/image'));
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -102,12 +105,9 @@ const Home: NextPage = () => {
     }
 
     getIntent(input).then(r=>r.json()).then(res=>{
-      console.log(res);
       var labels = [];
       var marksData = [];
-
       var count = 5;
-
       if(res['intents']){
         for(var i=0;i<res['intents'].length;i++){
           count--;

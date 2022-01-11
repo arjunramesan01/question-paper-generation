@@ -1,3 +1,4 @@
+
 html,
 body {
   padding: 0;
@@ -72,4 +73,12 @@ th, td{
   background: #f4f4f4;
   border-radius: 10px;
   margin-bottom: 1rem;
+}
+
+.accordion__panel {
+  padding: 0px 30px 35px 30px!important;
+}
+
+.slick-prev:before, .slick-next:before {
+  color: #e99906!important;
 }

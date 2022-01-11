@@ -5,15 +5,17 @@ import {useState} from "react";
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { getQuestionPaperDetails, getAllAssesments, titleGenerator } from '../../common';
-import dynamic from "next/dynamic";
-import Image from 'next/image'
-import SolutionPopup from '../../components/solutionPopup';
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import 'katex/dist/katex.min.css';
-import MarkingAssistPopup from '../../components/markingassistPopup';
-import SlidingPanel from 'react-sliding-side-panel';
 import 'react-sliding-side-panel/lib/index.css';
+
+import dynamic from "next/dynamic";
+const SolutionPopup = dynamic(() => import("../../components/solutionPopup"));
 const Popup = dynamic(() => import("reactjs-popup"));
+const SlidingPanel = dynamic(() => import("react-sliding-side-panel"));
+const MarkingAssistPopup = dynamic(() => import("../../components/markingassistPopup"));
+const Image = dynamic(() => import("next/image"));
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -760,9 +762,9 @@ const QuestionPaper: NextPage = () => {
                             {el['groups'].map((elT,i) => 
                             <div className={styles.groupDiv} key={'group_' + i}>
                                 {elT['questions'].map((el,j) =>
-                                <>
+                                <div key={'elt_' + j}>
                                 { 
-                                <div style={(filterSelected == null || filterSelected == el['question']['matchingRelation']['topic'] || filterSelected == el['question']['matchingRelation']['bloomsIndex'] || filterSelected == el['question']['type']) ? {opacity:1} : {opacity:0.2}}>
+                                <div  style={(filterSelected == null || filterSelected == el['question']['matchingRelation']['topic'] || filterSelected == el['question']['matchingRelation']['bloomsIndex'] || filterSelected == el['question']['type']) ? {opacity:1} : {opacity:0.2}}>
                                     { j==0 &&
                                     <>
                                     <div className={styles.groupTitle}>{elT['info']['name']}</div>
@@ -823,7 +825,7 @@ const QuestionPaper: NextPage = () => {
                                     </div>
                                 </div>
                                 }
-                                </>
+                                </div>
                                 )}
                             </div>
                             )}

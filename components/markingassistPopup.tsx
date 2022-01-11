@@ -32,20 +32,18 @@ const MarkingAssistPopup = (data:any) => {
                 <b>Marks</b>
             </div>
         </div>
-        {steps.map((el,i) =>
-        <>
         <MathJaxContext version={2} config={mathjaxConfig}>
             <MathJax>
-            <div className={styles.markingAsssistDiv}>
+            {steps.map((el,i) =>
+            <div key={'ma_' + i} className={styles.markingAsssistDiv}>
                     <div dangerouslySetInnerHTML={{ __html: el['step']}}>
                     </div>
                     <div dangerouslySetInnerHTML={{ __html: el['marks']}}>
                     </div>
             </div>
+            )}
             </MathJax>
         </MathJaxContext>
-        </>
-        )}
         </>
     )
 }
