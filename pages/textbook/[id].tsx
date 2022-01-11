@@ -111,6 +111,7 @@ const Textbook: NextPage = () => {
                                     <span>{el['name']}</span>
                                     <div className={styles.thumbnailDiv}>
                                     { el['thumbnail'][0] &&   <Image src={el['thumbnail'][0]} layout='fill'></Image>}
+                                    { !el['thumbnail'][0] &&   <Image src='/images/thumbnail.png' layout='fill'></Image>}
                                     </div>
                                 </div>
                             </div>

@@ -40,7 +40,7 @@
     margin-top: 0.5rem;
     position: relative;
     height: 9rem;
-    background-color: black;
+    background-color: #cfcfcf;
 }
 
 @media only screen and (max-width: 600px) {
